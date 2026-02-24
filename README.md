@@ -1,6 +1,64 @@
 # Helix adaptation of Drools LSP
 This is a fork of [Drools LSP](https://github.com/kiegroup/drools-lsp) adapted for usage with the [Helix](https://helix-editor.com/) editor.
 
+## Installation
+
+### Binary Release
+
+1. Download `drools-lsp.tar.gz` from the [latest release](https://github.com/iByteABit256/drools-lsp-helix/releases)
+2. Extract it — you will find two files:
+   - `drools-lsp` — the launcher script
+   - `drools-lsp-server-jar-with-dependencies.jar` — the server
+3. Place both files in the same directory on your `PATH`:
+
+   **Unix:**
+   ```sh
+   mkdir -p ~/.local/bin
+   tar -xzf drools-lsp.tar.gz -C ~/.local/bin
+   chmod +x ~/.local/bin/drools-lsp
+   ```
+   Ensure `~/.local/bin` is on your `PATH`. Add this to your shell profile (`.bashrc`, `.zshrc`, etc.) if needed:
+   ```sh
+   export PATH="$HOME/.local/bin:$PATH"
+   ```
+
+   **Windows:**
+   ```bat
+   mkdir "%LOCALAPPDATA%\Programs\drools-lsp"
+   tar -xzf drools-lsp.tar.gz -C "%LOCALAPPDATA%\Programs\drools-lsp"
+   ```
+   Then add `%LOCALAPPDATA%\Programs\drools-lsp` to your `PATH` via System Properties > Environment Variables.
+
+4. Verify the installation:
+   ```sh
+   drools-lsp
+   ```
+   The server should start and wait for input. Press `Ctrl+C` to exit.
+
+### Building from Source
+
+1. Clone the repository and build with Maven:
+   ```sh
+   git clone https://github.com/iByteABit256/drools-lsp-helix.git
+   cd drools-lsp-helix
+   mvn clean package
+   ```
+2. Copy the launcher script and jar to a directory on your `PATH`:
+
+   **Unix:**
+   ```sh
+   cp drools-lsp-server/scripts/drools-lsp ~/.local/bin/
+   cp drools-lsp-server/target/drools-lsp-server-jar-with-dependencies.jar ~/.local/bin/
+   chmod +x ~/.local/bin/drools-lsp
+   ```
+
+   **Windows:**
+   ```bat
+   mkdir "%LOCALAPPDATA%\Programs\drools-lsp"
+   copy drools-lsp-server\scripts\drools-lsp "%LOCALAPPDATA%\Programs\drools-lsp"
+   copy drools-lsp-server\target\drools-lsp-server-jar-with-dependencies.jar "%LOCALAPPDATA%\Programs\drools-lsp"
+   ```
+
 ---
 
 Overview
