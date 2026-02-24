@@ -1,3 +1,8 @@
+# Helix adaptation of Drools LSP
+This is a fork of [Drools LSP](https://github.com/kiegroup/drools-lsp) adapted for usage with the [Helix](https://helix-editor.com/) editor.
+
+---
+
 Overview
 ===
 This is an experimental implementation of [LSP](https://microsoft.github.io/language-server-protocol/) based project intended to provide support for a [DRL](https://docs.jboss.org/drools/release/latest/drools-docs/html_single/#drl-rules-con_drl-rules) text editor.
