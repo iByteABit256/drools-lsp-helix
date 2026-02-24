@@ -1,0 +1,77 @@
+#!/usr/bin/env python3
+"""
+drools-lsp - Launcher for the Drools Language Server
+
+Installation:
+  Place this script and the jar in the same directory, then add that directory to your PATH.
+
+  Unix:
+    ~/.local/bin/drools-lsp
+    ~/.local/bin/drools-lsp-server-jar-with-dependencies.jar
+    chmod +x ~/.local/bin/drools-lsp
+
+  Windows:
+    %LOCALAPPDATA%\\Programs\\drools-lsp\\drools-lsp
+    %LOCALAPPDATA%\\Programs\\drools-lsp\\drools-lsp-server-jar-with-dependencies.jar
+    Then add %LOCALAPPDATA%\\Programs\\drools-lsp to your PATH in System Properties > Environment Variables.
+"""
+
+import glob
+import os
+import shutil
+import subprocess
+import sys
+
+
+def find_jar():
+    script_dir = os.path.dirname(os.path.realpath(__file__))
+    matches = glob.glob(os.path.join(script_dir, "drools-lsp-server-jar-with-dependencies.jar"))
+    return matches[0] if matches else None
+
+
+def find_java():
+    # Prefer JAVA_HOME if set
+    java_home = os.environ.get("JAVA_HOME")
+    if java_home:
+        java_bin = os.path.join(java_home, "bin", "java")
+        if sys.platform == "win32":
+            java_bin += ".exe"
+        if os.path.isfile(java_bin):
+            return java_bin
+
+    # Fall back to java on PATH
+    java = shutil.which("java")
+    if java:
+        return java
+
+    return None
+
+
+def main():
+    java = find_java()
+    if not java:
+        print(
+            "drools-lsp: could not find a Java runtime.\n"
+            "drools-lsp: please install Java and ensure 'java' is in your PATH, or set JAVA_HOME.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+    jar = find_jar()
+    if not jar:
+        print(
+            "drools-lsp: could not find drools-lsp-server-jar-with-dependencies.jar, expected it next to this script.\n",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+    try:
+        result = subprocess.run([java, "-jar", jar] + sys.argv[1:])
+        sys.exit(result.returncode)
+    except KeyboardInterrupt:
+        print("\ndrools-lsp: shutting down.", file=sys.stderr)
+        sys.exit(0)
+
+
+if __name__ == "__main__":
+    main()
