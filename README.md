@@ -5,13 +5,14 @@ This is a fork of [Drools LSP](https://github.com/kiegroup/drools-lsp) adapted f
 
 ### Binary Release
 
-1. Download `drools-lsp.tar.gz` from the [latest release](https://github.com/iByteABit256/drools-lsp-helix/releases)
-2. Extract it — you will find two files:
-   - `drools-lsp` — the launcher script
-   - `drools-lsp-server-jar-with-dependencies.jar` — the server
-3. Place both files in the same directory on your `PATH`:
-
    **Unix:**
+   
+   1. Download `drools-lsp.tar.gz` from the [latest release](https://github.com/iByteABit256/drools-lsp-helix/releases)
+   2. Extract it — you will find two files:
+      - `drools-lsp` — the launcher script
+      - `drools-lsp-server-jar-with-dependencies.jar` — the server
+   3. Place both files in the same directory on your `PATH`:
+   
    ```sh
    mkdir -p ~/.local/bin
    tar -xzf drools-lsp.tar.gz -C ~/.local/bin
@@ -23,13 +24,21 @@ This is a fork of [Drools LSP](https://github.com/kiegroup/drools-lsp) adapted f
    ```
 
    **Windows:**
-   ```bat
-   mkdir "%LOCALAPPDATA%\Programs\drools-lsp"
-   tar -xzf drools-lsp.tar.gz -C "%LOCALAPPDATA%\Programs\drools-lsp"
-   ```
-   Then add `%LOCALAPPDATA%\Programs\drools-lsp` to your `PATH` via System Properties > Environment Variables.
 
-4. Verify the installation:
+   1. Download `drools-lsp.7z` from the [latest release](https://github.com/iByteABit256/drools-lsp-helix/releases)
+   2. Extract it — you will find two files:
+      - `drools-lsp.exe` — the launcher executable
+      - `drools-lsp-server-jar-with-dependencies.jar` — the server
+   3. Place both files in the same directory on your `PATH`:
+   
+   ```bat
+   mkdir C:\bin
+   cd C:\bin\drools-lsp
+   7z e drools-lsp.7z
+   ```
+   Then add `C:\bin` to your `PATH` via System Properties > Environment Variables.
+
+**Verify the installation**:
    ```sh
    drools-lsp
    ```
@@ -54,10 +63,11 @@ This is a fork of [Drools LSP](https://github.com/kiegroup/drools-lsp) adapted f
 
    **Windows:**
    ```bat
-   mkdir "%LOCALAPPDATA%\Programs\drools-lsp"
-   copy drools-lsp-server\scripts\drools-lsp "%LOCALAPPDATA%\Programs\drools-lsp"
-   copy drools-lsp-server\target\drools-lsp-server-jar-with-dependencies.jar "%LOCALAPPDATA%\Programs\drools-lsp"
+   mkdir C:\bin
+   copy drools-lsp-server\target\drools-lsp-server-jar-with-dependencies.jar C:\bin
    ```
+
+   Then use [Launch4j](https://sourceforge.net/projects/launch4j/) to create a launcher executable using the configuration in `drools-lsp-server/scripts/launch4j-drools-lsp.xml`.
 
 ---
 
