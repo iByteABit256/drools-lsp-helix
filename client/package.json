@@ -1,7 +1,7 @@
 {
   "name": "vscode-extension-drl-editor",
   "displayName": "DRL Editor",
-  "description": "Edit DRL (Drools Rule Language) files",
+  "description": "Syntax highlighting, completion, diagnostics, hover, go-to-definition and references for DRL (Drools Rule Language) files",
   "publisher": "kie-group",
   "version": "1.0.0-alpha",
   "repository": {
