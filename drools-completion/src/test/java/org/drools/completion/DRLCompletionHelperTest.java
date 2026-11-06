@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import org.eclipse.lsp4j.CompletionItem;
+import org.eclipse.lsp4j.CompletionItemKind;
 import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.MessageActionItem;
 import org.eclipse.lsp4j.MessageParams;
@@ -99,7 +100,7 @@ class DRLCompletionHelperTest {
         caretPosition.setLine(8);
         caretPosition.setCharacter(15);
         result = DRLCompletionHelper.getCompletionItems(text, caretPosition, getLanguageClient());
-        assertThat(result).isEmpty(); // no completion for identifier
+        assertThat(completionItemStrings(result)).contains("Dog", "list"); // semantic symbols (fact type + global) at identifier position
 
         // `  th`
         caretPosition.setLine(9);
@@ -119,6 +120,43 @@ class DRLCompletionHelperTest {
         caretPosition.setCharacter(0);
         result = DRLCompletionHelper.getCompletionItems(text, caretPosition, getLanguageClient());
         assertThat(completionItemStrings(result)).contains("import", "global", "rule"); // top level statements
+    }
+
+    @Test
+    void semanticCompletion() {
+        String text = """
+                package org.example;
+
+                import org.example.model.Dog;
+
+                global java.util.List list;
+
+                rule MyRule
+                  when
+                    $dog : D
+                  then
+                    list.add($dog);
+                end
+                """;
+
+        Position caretPosition = new Position();
+
+        // fact type position: '$dog : D' — expect the imported fact type 'Dog' (kind Class)
+        caretPosition.setLine(8);
+        caretPosition.setCharacter(12);
+        List<CompletionItem> result = DRLCompletionHelper.getCompletionItems(text, caretPosition, getLanguageClient());
+        assertThat(completionItemStrings(result)).contains("Dog");
+        assertThat(result).anySatisfy(item -> {
+            if ("Dog".equals(item.getLabel())) {
+                assertThat(item.getKind()).isEqualTo(CompletionItemKind.Class);
+            }
+        });
+
+        // name-declaration position: 'rule ' — no semantic symbols suggested
+        caretPosition.setLine(6);
+        caretPosition.setCharacter(5);
+        result = DRLCompletionHelper.getCompletionItems(text, caretPosition, getLanguageClient());
+        assertThat(completionItemStrings(result)).doesNotContain("Dog", "list");
     }
 
     private List<String> completionItemStrings(List<CompletionItem> result) {

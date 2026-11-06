@@ -29,7 +29,7 @@
     <dependency>
       <groupId>org.eclipse.lsp4j</groupId>
       <artifactId>org.eclipse.lsp4j</artifactId>
-      <version>0.12.0</version>
+      <version>${version.org.eclipse.lsp4j}</version>
       <scope>compile</scope>
     </dependency>
     <dependency>

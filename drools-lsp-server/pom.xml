@@ -20,6 +20,11 @@
       <artifactId>drools-completion</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.drools</groupId>
+      <artifactId>drools-java</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
     <!-- External dependencies -->
     <dependency>

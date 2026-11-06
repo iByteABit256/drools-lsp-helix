@@ -7,6 +7,7 @@ import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.InitializeResult;
 import org.eclipse.lsp4j.ServerCapabilities;
 import org.eclipse.lsp4j.TextDocumentSyncKind;
+import org.eclipse.lsp4j.TextDocumentSyncOptions;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.LanguageClientAware;
 import org.eclipse.lsp4j.services.LanguageServer;
@@ -40,9 +41,15 @@ public class DroolsLspServer implements LanguageServer, LanguageClientAware {
         final InitializeResult initializeResult = new InitializeResult(new ServerCapabilities());
 
         // Set the capabilities of the LS to inform the client.
-        initializeResult.getCapabilities().setTextDocumentSync(TextDocumentSyncKind.Full);
+        TextDocumentSyncOptions syncOptions = new TextDocumentSyncOptions();
+        syncOptions.setChange(TextDocumentSyncKind.Incremental);
+        syncOptions.setSave(Boolean.TRUE);
+        initializeResult.getCapabilities().setTextDocumentSync(syncOptions);
         CompletionOptions completionOptions = new CompletionOptions();
         initializeResult.getCapabilities().setCompletionProvider(completionOptions);
+        initializeResult.getCapabilities().setHoverProvider(Boolean.TRUE);
+        initializeResult.getCapabilities().setDefinitionProvider(Boolean.TRUE);
+        initializeResult.getCapabilities().setReferencesProvider(Boolean.TRUE);
         return CompletableFuture.supplyAsync( () -> initializeResult );
     }
 

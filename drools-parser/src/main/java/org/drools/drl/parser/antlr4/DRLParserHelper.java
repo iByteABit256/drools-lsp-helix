@@ -8,6 +8,7 @@ import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.TokenStream;
 
 /**
  * Collection of static helper methods for DRLParser
@@ -33,8 +34,11 @@ public class DRLParserHelper {
 
     private static DRL10Parser createDrlParser(CharStream charStream) {
         DRL10Lexer drlLexer = new DRL10Lexer(charStream);
+        drlLexer.removeErrorListeners();
         CommonTokenStream commonTokenStream = new CommonTokenStream(drlLexer);
-        return new DRL10Parser(commonTokenStream);
+        DRL10Parser parser = new DRL10Parser(commonTokenStream);
+        parser.removeErrorListeners();
+        return parser;
     }
 
     /**
@@ -61,12 +65,42 @@ public class DRLParserHelper {
 
     public static String getFirstRuleName(String drl) {
         DRL10Parser parser = createDrlParser(drl);
-        DRL10Parser.CompilationUnitContext compilationUnitContext = parser.compilationUnit();
-        return compilationUnitContext.drlStatementdef()
+        return getFirstRuleName(parser.compilationUnit());
+    }
+
+    public static String getFirstRuleName(DRL10Parser.CompilationUnitContext cu) {
+        return cu.drlStatementdef()
                 .stream()
                 .filter(def -> def.ruledef() != null)
                 .map(def -> def.ruledef().name.getText())
                 .findFirst()
                 .orElse("");
+    }
+
+    /**
+     * Returns the text of the token under the given caret position (0-based line/col), or null if none.
+     */
+    public static String getTokenTextAt(String drl, int line, int col) {
+        DRL10Parser parser = createDrlParser(drl);
+        parser.compilationUnit();
+        return getTokenTextAt(parser.getInputStream(), line, col);
+    }
+
+    /**
+     * Returns the text of the token under the given caret position (0-based line/col) from an already
+     * lexed token stream, or null if none.
+     */
+    public static String getTokenTextAt(TokenStream tokens, int line, int col) {
+        for (int i = 0; i < tokens.size(); i++) {
+            Token token = tokens.get(i);
+            if (token.getLine() == line + 1) {
+                int start = token.getCharPositionInLine();
+                int stop = start + token.getText().length();
+                if (col >= start && col <= stop) {
+                    return token.getText();
+                }
+            }
+        }
+        return null;
     }
 }
